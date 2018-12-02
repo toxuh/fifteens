@@ -1,0 +1,26 @@
+.Game {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 600px;
+    height: 600px;
+}
+
+.Game .Game__cell {
+    background: #ececec;
+    flex: 0 0 25%;
+    align-items: stretch;
+    text-align: center;
+    font-size: 32px;
+    line-height: 150px; /* TODO: make flexible */
+}
+
+.Game .Game__cell.empty {
+    background: #fff;
+}
+
+.Game .Game__cell.empty:hover,
+.Game .Game__cell.possible:hover {
+    background: #e0e0e0;
+    cursor: pointer;
+}
