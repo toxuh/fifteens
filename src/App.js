@@ -37,7 +37,12 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                {this.state.mixed && <Game array={this.state.mixed} onUpdate={this.updateMixedCells} />}
+                {this.state.mixed &&
+                    <Game
+                        array={this.state.mixed}
+                        onUpdate={this.updateMixedCells}
+                    />
+                }
             </div>
         );
     }
