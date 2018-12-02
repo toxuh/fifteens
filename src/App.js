@@ -20,7 +20,8 @@ class App extends Component {
     }
 
     mixCells = () => {
-        let mixedArray = this.array.sort(function() { return Math.random()-.5; }).concat(0);
+        // Get numbers array, mix it, concat empty cell
+        const mixedArray = this.array.sort(() => Math.random()-.5).concat(0);
 
         this.setState({
             mixed: mixedArray

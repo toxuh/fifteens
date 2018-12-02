@@ -16,7 +16,7 @@ class Game extends Component {
                     const empty = number === 0 ? 'empty' : '';
 
                     return (
-                        <div className={`Game__cell ${empty}`}>{ number }</div>
+                        <div className={`Game__cell ${empty}`}>{ number !== 0 && number }</div>
                     )
                 })}
             </div>
