@@ -16,7 +16,8 @@ class App extends Component {
         this.array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]; //16th for empty cell
 
         this.state = {
-            mixed: null
+            mixed: null,
+            emptyIndex: 15 // Initial position of empty cell
         };
     }
 
@@ -32,12 +33,17 @@ class App extends Component {
         const game = JSON.parse(LocalStorage.get(LOCALSTORAGE_SESSION_NAME));
 
         this.setState({
-            mixed: game
+            mixed: game.array,
+            emptyIndex: game.empty
         })
     };
 
-    saveGame = (arr) => {
-        LocalStorage.set(LOCALSTORAGE_SESSION_NAME, JSON.stringify(arr));
+    saveGame = (array, empty) => {
+        const game = {
+            array,
+            empty
+        };
+        LocalStorage.set(LOCALSTORAGE_SESSION_NAME, JSON.stringify(game));
     };
 
     mixCells = () => {
@@ -49,18 +55,25 @@ class App extends Component {
         })
     };
 
-    updateMixedCells = (arr) => {
+    updateMixedCells = (arr, empty) => {
         this.setState({
-            mixed: arr
+            mixed: arr,
+            emptyIndex: empty
         });
     };
 
     render() {
+        const {
+            mixed,
+            emptyIndex
+        } = this.state;
+
         return (
             <div className="App">
                 {this.state.mixed &&
                     <Game
-                        array={this.state.mixed}
+                        array={mixed}
+                        emptyIndex={emptyIndex}
                         onUpdate={this.updateMixedCells}
                         onSaveGame={this.saveGame}
                     />

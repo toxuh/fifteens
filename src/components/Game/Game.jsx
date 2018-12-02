@@ -9,6 +9,7 @@ class Game extends Component {
             PropTypes.number,
             PropTypes.string
         ])),
+        emptyIndex: PropTypes.number,
         onUpdate: PropTypes.func,
         onSaveGame: PropTypes.func
     };
@@ -19,18 +20,20 @@ class Game extends Component {
         this.steps = [-4, 1, +4, -1]; // Top, right, down, left
 
         this.state = {
-            win: false,
-            emptyIndex: 15 // Initial position of empty cell
+            win: false
         };
     }
 
     clickHandler = (e) => {
-        const { emptyIndex } = this.state;
+        const {
+            emptyIndex,
+            array
+        } = this.props;
         const id = e.target.innerText;
 
         // If click on number cell
         if (id) {
-            const index = this.props.array.findIndex(i => i === parseInt(id));
+            const index = array.findIndex(i => i === parseInt(id));
 
             this.steps.forEach(step => {
                 // Checks that it is possible move
@@ -45,8 +48,8 @@ class Game extends Component {
     };
 
     move = (newIndex) => {
-        const { emptyIndex } = this.state;
         const {
+            emptyIndex,
             array,
             onUpdate,
             onSaveGame
@@ -58,19 +61,14 @@ class Game extends Component {
         array[newIndex] = empty;
         array[emptyIndex] = newValue;
 
-        // Change empty cell position
-        this.setState({
-            emptyIndex: newIndex
-        });
-
         // Update app with new array
-        onUpdate(array);
+        onUpdate(array, newIndex);
 
         // Check if game over
         this.checkResult();
 
         // Save current game to local storage
-        onSaveGame(array);
+        onSaveGame(array, newIndex);
     };
 
     checkResult() {
