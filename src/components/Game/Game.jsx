@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import {
+    POSSIBLE_STEPS
+} from "../../constants";
+
 import './Game.css';
 
 class Game extends Component {
@@ -10,32 +14,24 @@ class Game extends Component {
             PropTypes.string
         ])),
         emptyIndex: PropTypes.number,
+        isWin: PropTypes.bool,
         onUpdate: PropTypes.func,
-        onSaveGame: PropTypes.func
+        onSaveGame: PropTypes.func,
+        onCheckResult: PropTypes.func
     };
-
-    constructor(props) {
-        super(props);
-
-        this.steps = [-4, 1, +4, -1]; // Top, right, down, left
-
-        this.state = {
-            win: false
-        };
-    }
 
     clickHandler = (e) => {
         const {
             emptyIndex,
             array
         } = this.props;
-        const id = e.target.innerText;
+        const number = e.target.innerText;
 
         // If click on number cell
-        if (id) {
-            const index = array.findIndex(i => i === parseInt(id));
+        if (number) {
+            const index = array.findIndex(i => i === parseInt(number));
 
-            this.steps.forEach(step => {
+            POSSIBLE_STEPS.forEach(step => {
                 // Checks that it is possible move
                 if (
                     ((emptyIndex + step < 16) && (emptyIndex + step === index)) ||
@@ -52,7 +48,8 @@ class Game extends Component {
             emptyIndex,
             array,
             onUpdate,
-            onSaveGame
+            onSaveGame,
+            onCheckResult
         } = this.props;
         const empty = array[emptyIndex];
         const newValue = array[newIndex];
@@ -64,11 +61,11 @@ class Game extends Component {
         // Update app with new array
         onUpdate(array, newIndex);
 
-        // Check if game over
-        this.checkResult();
-
         // Save current game to local storage
         onSaveGame(array, newIndex);
+
+        // Check if game over
+        onCheckResult();
     };
 
     checkResult() {
@@ -100,7 +97,7 @@ class Game extends Component {
                     )
                 })}
                 <h1>
-                    {this.state.win && (
+                    {this.props.isWin && (
                         <span>WIN!!!</span>
                     )}
                 </h1>

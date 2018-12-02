@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import Game from './components/Game';
 import LocalStorage from './helpers/LS'
@@ -10,32 +11,22 @@ import {
 import './App.css';
 
 class App extends Component {
-    constructor(props) {
-        super(props);
-
-        this.array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]; //16th for empty cell
-
-        this.state = {
-            mixed: null,
-            emptyIndex: 15 // Initial position of empty cell
-        };
-    }
-
     componentDidMount = () => {
         if (LocalStorage.get(LOCALSTORAGE_SESSION_NAME)) {
-            this.resumeGame()
+            const game = JSON.parse(LocalStorage.get(LOCALSTORAGE_SESSION_NAME));
+
+            this.props.dispatch({
+                type: 'UPDATE_BOARD',
+                payloads: {
+                    mixedArray: game.array,
+                    emptyIndex: game.empty
+                }
+            })
         } else {
-            this.mixCells()
+            this.props.dispatch({
+                type: 'MIX_ARRAY'
+            })
         }
-    };
-
-    resumeGame = () => {
-        const game = JSON.parse(LocalStorage.get(LOCALSTORAGE_SESSION_NAME));
-
-        this.setState({
-            mixed: game.array,
-            emptyIndex: game.empty
-        })
     };
 
     saveGame = (array, empty) => {
@@ -43,39 +34,43 @@ class App extends Component {
             array,
             empty
         };
+
         LocalStorage.set(LOCALSTORAGE_SESSION_NAME, JSON.stringify(game));
     };
 
-    mixCells = () => {
-        // Get numbers array, mix it, concat empty cell
-        const mixedArray = this.array.sort(() => Math.random()-.5).concat('empty');
-
-        this.setState({
-            mixed: mixedArray
-        })
+    updateMixedCells = (array, empty) => {
+        this.props.dispatch({
+            type: 'UPDATE_BOARD',
+            payloads: {
+                mixedArray: array,
+                emptyIndex: empty
+            }
+        });
     };
 
-    updateMixedCells = (arr, empty) => {
-        this.setState({
-            mixed: arr,
-            emptyIndex: empty
-        });
+    checkResult = () => {
+        this.props.dispatch({
+            type: 'CHECK_GAME'
+        })
     };
 
     render() {
         const {
-            mixed,
-            emptyIndex
-        } = this.state;
+            mixedArray,
+            emptyIndex,
+            win
+        } = this.props;
 
         return (
             <div className="App">
-                {this.state.mixed &&
+                {mixedArray &&
                     <Game
-                        array={mixed}
+                        array={mixedArray}
                         emptyIndex={emptyIndex}
+                        isWin={win}
                         onUpdate={this.updateMixedCells}
                         onSaveGame={this.saveGame}
+                        onCheckResult={this.checkResult}
                     />
                 }
             </div>
@@ -83,4 +78,11 @@ class App extends Component {
     }
 }
 
-export default App;
+const mapStateToProps = state => ({
+    initialArray: state.initialArray,
+    emptyIndex: state.emptyIndex,
+    mixedArray: state.mixedArray,
+    win: state.win
+});
+
+export default connect(mapStateToProps)(App);
