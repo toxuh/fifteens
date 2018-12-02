@@ -1,8 +1,18 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import './Game.css';
 
 class Game extends Component {
+    static propTypes = {
+        array: PropTypes.arrayOf(PropTypes.oneOfType([
+            PropTypes.number,
+            PropTypes.string
+        ])),
+        onUpdate: PropTypes.func,
+        onSaveGame: PropTypes.func
+    };
+
     constructor(props) {
         super(props);
 
@@ -36,13 +46,17 @@ class Game extends Component {
 
     move = (newIndex) => {
         const { emptyIndex } = this.state;
-        const arr = this.props.array;
-        const empty = arr[emptyIndex];
-        const newValue = arr[newIndex];
+        const {
+            array,
+            onUpdate,
+            onSaveGame
+        } = this.props;
+        const empty = array[emptyIndex];
+        const newValue = array[newIndex];
 
         // Making array with new positions
-        arr[newIndex] = empty;
-        arr[emptyIndex] = newValue;
+        array[newIndex] = empty;
+        array[emptyIndex] = newValue;
 
         // Change empty cell position
         this.setState({
@@ -50,26 +64,23 @@ class Game extends Component {
         });
 
         // Update app with new array
-        this.props.onUpdate(arr);
+        onUpdate(array);
 
         // Check if game over
         this.checkResult();
+
+        // Save current game to local storage
+        onSaveGame(array);
     };
 
     checkResult() {
-        const { array } = this.props;
-        const notValidItems = [];
+        const win = !this.props.array.some((item, index) => {
+            return (item > 0) && (item -1 !== index)
+        });
 
-        // Check that items in array in ascending order. 14 - to not check empty cell
-        for (let i = 0; i < 14; i++) {
-            const test = (array[i] + 1 !== array[i + 1]) && notValidItems.push(array[i + 1]);
-        }
-
-        if (notValidItems.length === 0) {
-            this.setState({
-                win: true
-            })
-        }
+        this.setState({
+            win
+        })
     }
 
     render() {

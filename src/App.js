@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 
 import Game from './components/Game';
+import LocalStorage from './helpers/LS'
+
+import {
+    LOCALSTORAGE_SESSION_NAME
+} from './constants'
 
 import './App.css';
 
@@ -16,7 +21,23 @@ class App extends Component {
     }
 
     componentDidMount = () => {
-        this.mixCells()
+        if (LocalStorage.get(LOCALSTORAGE_SESSION_NAME)) {
+            this.resumeGame()
+        } else {
+            this.mixCells()
+        }
+    };
+
+    resumeGame = () => {
+        const game = JSON.parse(LocalStorage.get(LOCALSTORAGE_SESSION_NAME));
+
+        this.setState({
+            mixed: game
+        })
+    };
+
+    saveGame = (arr) => {
+        LocalStorage.set(LOCALSTORAGE_SESSION_NAME, JSON.stringify(arr));
     };
 
     mixCells = () => {
@@ -41,6 +62,7 @@ class App extends Component {
                     <Game
                         array={this.state.mixed}
                         onUpdate={this.updateMixedCells}
+                        onSaveGame={this.saveGame}
                     />
                 }
             </div>
