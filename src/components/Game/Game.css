@@ -19,8 +19,12 @@
     background: #fff;
 }
 
-.Game .Game__cell.empty:hover,
-.Game .Game__cell.possible:hover {
+.Game .Game__cell:hover {
     background: #e0e0e0;
     cursor: pointer;
+}
+
+.Game .Game__cell.empty:hover {
+    background: #fff;
+    cursor: default;
 }
