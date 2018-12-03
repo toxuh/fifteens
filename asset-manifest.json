@@ -1,0 +1,13 @@
+{
+  "main.css": "/fifteens/static/css/main.e9b7a5aa.chunk.css",
+  "main.js": "/fifteens/static/js/main.7761c7b8.chunk.js",
+  "main.js.map": "/fifteens/static/js/main.7761c7b8.chunk.js.map",
+  "static/js/1.4c1bea9d.chunk.js": "/fifteens/static/js/1.4c1bea9d.chunk.js",
+  "static/js/1.4c1bea9d.chunk.js.map": "/fifteens/static/js/1.4c1bea9d.chunk.js.map",
+  "runtime~main.js": "/fifteens/static/js/runtime~main.ec8ec2e2.js",
+  "runtime~main.js.map": "/fifteens/static/js/runtime~main.ec8ec2e2.js.map",
+  "static/css/main.e9b7a5aa.chunk.css.map": "/fifteens/static/css/main.e9b7a5aa.chunk.css.map",
+  "index.html": "/fifteens/index.html",
+  "precache-manifest.d3a7ffe62d8df8b02645ed40b23d8c2b.js": "/fifteens/precache-manifest.d3a7ffe62d8df8b02645ed40b23d8c2b.js",
+  "service-worker.js": "/fifteens/service-worker.js"
+}
