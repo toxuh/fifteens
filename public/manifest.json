@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Fifteens game",
+  "name": "Fifteens game, based on React framework",
   "icons": [
     {
       "src": "favicon.ico",
