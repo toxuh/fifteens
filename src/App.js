@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import Game from './components/Game';
+import Game from './containers/Game';
+import Info from './containers/Info';
+
+import H1 from "./components/H1/H1";
+import P from "./components/P/P";
+
 import LocalStorage from './helpers/LS'
 
 import {
@@ -16,10 +21,11 @@ class App extends Component {
             const game = JSON.parse(LocalStorage.get(LOCALSTORAGE_SESSION_NAME));
 
             this.props.dispatch({
-                type: 'UPDATE_BOARD',
+                type: 'LOAD_GAME',
                 payloads: {
                     mixedArray: game.array,
-                    emptyIndex: game.empty
+                    emptyIndex: game.empty,
+                    moves: game.moves
                 }
             })
         } else {
@@ -29,16 +35,13 @@ class App extends Component {
         }
     };
 
-    saveGame = (array, empty) => {
-        const game = {
-            array,
-            empty
-        };
-
-        LocalStorage.set(LOCALSTORAGE_SESSION_NAME, JSON.stringify(game));
+    saveGame = () => {
+        this.props.dispatch({
+            type: 'SAVE_GAME'
+        });
     };
 
-    updateMixedCells = (array, empty) => {
+    onUpdateMixedCells = (array, empty) => {
         this.props.dispatch({
             type: 'UPDATE_BOARD',
             payloads: {
@@ -48,9 +51,23 @@ class App extends Component {
         });
     };
 
-    checkResult = () => {
+    onCheckResult = () => {
         this.props.dispatch({
             type: 'CHECK_GAME'
+        })
+    };
+
+    onIncrementMoves = () => {
+        this.props.dispatch({
+            type: 'MOVE'
+        });
+    };
+
+    onResetGame = () => {
+        LocalStorage.remove(LOCALSTORAGE_SESSION_NAME);
+
+        this.props.dispatch({
+            type: 'MIX_ARRAY'
         })
     };
 
@@ -58,19 +75,32 @@ class App extends Component {
         const {
             mixedArray,
             emptyIndex,
-            win
+            win,
+            moves,
+            isSavedSession
         } = this.props;
 
         return (
             <div className="App">
+                <H1 cn="App__heading">Fifteens game</H1>
+                { isSavedSession && (
+                    <P cn="App__lead">
+                        Yor game was restored from last session.
+                    </P>
+                ) }
+                <Info
+                    moves={moves}
+                    onResetGame={this.onResetGame}
+                />
                 {mixedArray &&
                     <Game
                         array={mixedArray}
                         emptyIndex={emptyIndex}
                         isWin={win}
-                        onUpdate={this.updateMixedCells}
+                        onUpdate={this.onUpdateMixedCells}
                         onSaveGame={this.saveGame}
-                        onCheckResult={this.checkResult}
+                        onCheckResult={this.onCheckResult}
+                        onMove={this.onIncrementMoves}
                     />
                 }
             </div>
@@ -82,7 +112,9 @@ const mapStateToProps = state => ({
     initialArray: state.initialArray,
     emptyIndex: state.emptyIndex,
     mixedArray: state.mixedArray,
-    win: state.win
+    win: state.win,
+    moves: state.moves,
+    isSavedSession: state.isSavedSession
 });
 
 export default connect(mapStateToProps)(App);

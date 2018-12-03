@@ -1,0 +1,9 @@
+.Info {
+    text-align: center;
+}
+
+.Info .Info__counter {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 10px 0 4px;
+}

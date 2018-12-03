@@ -2,8 +2,9 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    max-width: 600px;
-    height: 600px;
+    max-width: 37vw;
+    margin: 0 auto;
+    position: relative;
 }
 
 .Game .Game__cell {
@@ -12,7 +13,7 @@
     align-items: stretch;
     text-align: center;
     font-size: 32px;
-    line-height: 150px; /* TODO: make flexible */
+    line-height: 9vw;
 }
 
 .Game .Game__cell.empty {
@@ -27,4 +28,24 @@
 .Game .Game__cell.empty:hover {
     background: #fff;
     cursor: default;
+}
+
+@media screen and (max-width: 992px) {
+    .Game {
+        max-width: 60vw
+    }
+    .Game .Game__cell {
+        font-size: 26px;
+        line-height: 16vw;
+    }
+}
+
+
+@media screen and (max-width: 768px) {
+    .Game {
+        max-width: 80vw
+    }
+    .Game .Game__cell {
+        line-height: 20vw;
+    }
 }

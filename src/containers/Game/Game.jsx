@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import Div from "../../components/Div";
+
 import {
     POSSIBLE_STEPS
-} from "../../constants";
+} from "../../constants/index";
 
 import './Game.css';
 
@@ -17,7 +19,8 @@ class Game extends Component {
         isWin: PropTypes.bool,
         onUpdate: PropTypes.func,
         onSaveGame: PropTypes.func,
-        onCheckResult: PropTypes.func
+        onCheckResult: PropTypes.func,
+        onMove: PropTypes.func
     };
 
     clickHandler = (e) => {
@@ -49,7 +52,8 @@ class Game extends Component {
             array,
             onUpdate,
             onSaveGame,
-            onCheckResult
+            onCheckResult,
+            onMove
         } = this.props;
         const empty = array[emptyIndex];
         const newValue = array[newIndex];
@@ -58,11 +62,14 @@ class Game extends Component {
         array[newIndex] = empty;
         array[emptyIndex] = newValue;
 
+        // Increment moves counter
+        onMove();
+
         // Update app with new array
         onUpdate(array, newIndex);
 
         // Save current game to local storage
-        onSaveGame(array, newIndex);
+        onSaveGame();
 
         // Check if game over
         onCheckResult();
@@ -79,7 +86,9 @@ class Game extends Component {
     }
 
     render() {
-        const { array } = this.props;
+        const {
+            array
+        } = this.props;
 
         return (
             <div className="Game">
@@ -87,13 +96,13 @@ class Game extends Component {
                     const empty = number === 'empty' ? 'empty' : '';
 
                     return (
-                        <div
+                        <Div
                             key={ number }
-                            className={`Game__cell ${empty}`}
+                            cn={`Game__cell ${empty}`}
                             onClick={this.clickHandler}
                         >
                             { number !== 'empty' && number }
-                        </div>
+                        </Div>
                     )
                 })}
                 <h1>
