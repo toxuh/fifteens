@@ -10,6 +10,7 @@ import P from "./components/P/P";
 import LocalStorage from './helpers/LS'
 
 import {
+    LOCALSTORAGE_HISTORY_NAME,
     LOCALSTORAGE_SESSION_NAME
 } from './constants'
 
@@ -31,14 +32,22 @@ class App extends Component {
         } else {
             this.props.dispatch({
                 type: 'MIX_ARRAY'
-            })
+            });
+
+            this.props.dispatch({
+                type: 'UPDATE_HISTORY'
+            });
         }
     };
 
-    saveGame = () => {
-        this.props.dispatch({
-            type: 'SAVE_GAME'
-        });
+    saveSession = () => {
+        const game = {
+            array: this.props.mixedArray,
+            empty: this.props.emptyIndex,
+            moves: this.props.moves
+        };
+
+        LocalStorage.set(LOCALSTORAGE_SESSION_NAME, JSON.stringify(game));
     };
 
     onUpdateMixedCells = (array, empty) => {
@@ -48,6 +57,10 @@ class App extends Component {
                 mixedArray: array,
                 emptyIndex: empty
             }
+        });
+
+        this.props.dispatch({
+            type: 'UPDATE_HISTORY'
         });
     };
 
@@ -65,10 +78,25 @@ class App extends Component {
 
     onResetGame = () => {
         LocalStorage.remove(LOCALSTORAGE_SESSION_NAME);
+        LocalStorage.remove(LOCALSTORAGE_HISTORY_NAME);
 
         this.props.dispatch({
             type: 'MIX_ARRAY'
-        })
+        });
+
+        this.props.dispatch({
+            type: 'UPDATE_HISTORY'
+        });
+    };
+
+    onUndo = () => {
+        this.props.dispatch({
+            type: 'UNDO'
+        });
+
+        this.props.dispatch({
+            type: 'UPDATE_HISTORY'
+        });
     };
 
     render() {
@@ -90,15 +118,16 @@ class App extends Component {
                 ) }
                 <Info
                     moves={moves}
+                    isWin={win}
                     onResetGame={this.onResetGame}
+                    onUndo={this.onUndo}
                 />
                 {mixedArray &&
                     <Game
                         array={mixedArray}
                         emptyIndex={emptyIndex}
-                        isWin={win}
                         onUpdate={this.onUpdateMixedCells}
-                        onSaveGame={this.saveGame}
+                        onSaveGame={this.saveSession}
                         onCheckResult={this.onCheckResult}
                         onMove={this.onIncrementMoves}
                     />
@@ -114,7 +143,8 @@ const mapStateToProps = state => ({
     mixedArray: state.mixedArray,
     win: state.win,
     moves: state.moves,
-    isSavedSession: state.isSavedSession
+    isSavedSession: state.isSavedSession,
+    history: state.history
 });
 
 export default connect(mapStateToProps)(App);

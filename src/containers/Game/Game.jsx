@@ -16,7 +16,6 @@ class Game extends Component {
             PropTypes.string
         ])),
         emptyIndex: PropTypes.number,
-        isWin: PropTypes.bool,
         onUpdate: PropTypes.func,
         onSaveGame: PropTypes.func,
         onCheckResult: PropTypes.func,
@@ -75,20 +74,8 @@ class Game extends Component {
         onCheckResult();
     };
 
-    checkResult() {
-        const win = !this.props.array.some((item, index) => {
-            return (item > 0) && (item -1 !== index)
-        });
-
-        this.setState({
-            win
-        })
-    }
-
     render() {
-        const {
-            array
-        } = this.props;
+        const { array } = this.props;
 
         return (
             <div className="Game">
@@ -105,11 +92,6 @@ class Game extends Component {
                         </Div>
                     )
                 })}
-                <h1>
-                    {this.props.isWin && (
-                        <span>WIN!!!</span>
-                    )}
-                </h1>
             </div>
         )
     }

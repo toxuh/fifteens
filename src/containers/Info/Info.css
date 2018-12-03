@@ -7,3 +7,13 @@
     font-weight: 700;
     margin: 0 10px 0 4px;
 }
+
+.Info .Info__button {
+    margin: 0 4px;
+}
+
+.Info .Info__greetings {
+    margin: 0 10px;
+    font-size: 18px;
+    font-weight: 700;
+}
